@@ -24,12 +24,18 @@ for route in ['demo','demo/ready','sms-consent']:
     p=pages[route]
     assert '(571) 556-5051' in p.source
     assert '/privacy/' in p.links and '/terms/' in p.links
-    assert 'not yet available' in p.source.lower()
+    if route != 'demo':
+        assert 'not yet available' in p.source.lower()
     assert 'Seif Sharara' in p.source
 assert '/demo/' in pages[''].links and '/demo/' in pages['sms-consent'].links
 assert 'tel:+15715565051' in pages['demo/ready'].links
 assert 'noindex' in pages['demo/ready'].source
-assert not any(t in pages['demo'].tags for t in ['form','input','iframe'])
+assert not any(t in pages['demo'].tags for t in ['form','input'])
+assert pages['demo'].tags.count('iframe') == 1
+assert 'https://api.leadconnectorhq.com/widget/form/5WP9sjNGRUWmi2fYcQGk' in pages['demo'].source
+assert 'https://link.msgsndr.com/js/form_embed.js' in pages['demo'].source
+assert 'not yet available' not in pages['demo'].source.lower()
+assert 'Demo form not connected yet' not in pages['demo'].source
 assert 'form' not in pages['demo/ready'].tags
 assert 'highlevel-form-container' in pages['demo'].ids
 for p in pages.values():
@@ -42,4 +48,4 @@ assert 'ivrPhone' not in config and 'ivrStatus' not in config
 assert '+15715565051' in config and '+17036781815' in config
 assert '<loc>/demo/</loc>' in (ROOT/'sitemap.xml').read_text()
 assert '/demo/ready/' not in (ROOT/'sitemap.xml').read_text()
-print('PASS: Six routes, consent/identity/number contract, legal links, safe placeholder, and sitemap.')
+print('PASS: Six routes, consent/identity/number contract, legal links, HighLevel embed, and sitemap.')

@@ -23,7 +23,6 @@
     <header class="page-header"><div class="container live-demo-content">
       <p class="eyebrow">LIVE DEMO</p><h1>See what happens after a missed call.</h1>
       <p class="lead">Enter your details, opt in to the live demo, then call our demo number. We intentionally won’t answer. If you opted in to SMS, Spark Standby will demonstrate what an automated missed-call follow-up could feel like.</p>
-      <p class="fact-panel"><strong>Not yet available.</strong> The live demo is being prepared. SMS enrollment is not available on this site yet, and the demo messaging workflow still needs to be connected and tested.</p>
     </div></header>
     <section class="live-demo-section" aria-labelledby="live-steps-title"><div class="container live-demo-content">
       <h2 id="live-steps-title">How it works</h2>
@@ -37,10 +36,27 @@
     <section class="live-demo-section" aria-labelledby="demo-form-title"><div class="container live-demo-content">
       <h2 id="demo-form-title">Request the live demo</h2>
       <p>Sender: Spark Standby, operated by Seif Sharara.</p>
-      <div id="highlevel-form-container" class="demo-form-placeholder" role="region" aria-labelledby="form-unavailable-title">
-        <!-- TODO: Replace this entire placeholder with the actual HighLevel form embed (First Name, Phone, separate unchecked optional non-marketing SMS consent). Configure successful submission redirect to /demo/ready/ in HighLevel. Verify consent is recorded there before enabling the live workflow. Do not add local consent state. -->
-        <h3 id="form-unavailable-title">Demo form not connected yet</h3>
-        <p>This is a placeholder for the live demo form. It does not collect information, record consent, or submit a request. Please return when enrollment is available.</p>
+      <div id="highlevel-form-container" class="demo-form-placeholder" role="region" aria-labelledby="demo-form-title">
+        <iframe
+          src="https://api.leadconnectorhq.com/widget/form/5WP9sjNGRUWmi2fYcQGk"
+          style="width:100%;height:100%;border:none;border-radius:8px"
+          id="inline-5WP9sjNGRUWmi2fYcQGk"
+          data-layout="{'id':'INLINE'}"
+          data-trigger-type="alwaysShow"
+          data-trigger-value=""
+          data-activation-type="alwaysActivated"
+          data-activation-value=""
+          data-deactivation-type="neverDeactivate"
+          data-deactivation-value=""
+          data-form-name="Spark Standby Live Demo Opt-In"
+          data-height="448"
+          data-layout-iframe-id="inline-5WP9sjNGRUWmi2fYcQGk"
+          data-form-id="5WP9sjNGRUWmi2fYcQGk"
+          data-cookie-consent="true"
+          data-cookie-consent-provider="auto"
+          title="Spark Standby Live Demo Opt-In"
+        ></iframe>
+        <script src="https://link.msgsndr.com/js/form_embed.js"></script>
       </div>
       <p class="small-note">Providing a phone number alone does not enroll you in SMS. You will only receive the demo text experience if you affirmatively opt in.</p>
       <div class="legal-links"><a href="/privacy/">Privacy Policy</a><a href="/terms/">Terms &amp; Conditions</a></div>
