@@ -23,13 +23,15 @@ for route,p in pages.items():
 for route in ['demo','demo/ready','sms-consent']:
     p=pages[route]
     assert '(571) 556-5051' in p.source
-    assert '/privacy/' in p.links and '/terms/' in p.links
     if route != 'demo':
-        assert 'not yet available' in p.source.lower()
+        assert '/privacy/' in p.links and '/terms/' in p.links
     assert 'Seif Sharara' in p.source
 assert '/demo/' in pages[''].links and '/demo/' in pages['sms-consent'].links
 assert 'tel:+15715565051' in pages['demo/ready'].links
 assert 'noindex' in pages['demo/ready'].source
+assert 'Not yet available' not in pages['demo/ready'].source
+assert 'No SMS will be sent if you did not opt in.' in pages['demo/ready'].source
+assert 'Opening this page does not submit a request or provide SMS consent.' in pages['demo/ready'].source
 assert not any(t in pages['demo'].tags for t in ['form','input'])
 assert pages['demo'].tags.count('iframe') == 1
 assert 'https://api.leadconnectorhq.com/widget/form/5WP9sjNGRUWmi2fYcQGk' in pages['demo'].source
@@ -42,10 +44,16 @@ for p in pages.values():
     assert 'localStorage' not in p.source and 'sessionStorage' not in p.source
 for route in ['privacy','terms']:
     assert 'sole proprietor' in pages[route].source
-    assert 'September 10, 2026' in pages[route].source
+    assert 'September 11, 2026' in pages[route].source
 config=(ROOT/'js/config.js').read_text()
+assert '/privacy/' in config and '/terms/' in config
 assert 'ivrPhone' not in config and 'ivrStatus' not in config
 assert '+15715565051' in config and '+17036781815' in config
 assert '<loc>/demo/</loc>' in (ROOT/'sitemap.xml').read_text()
 assert '/demo/ready/' not in (ROOT/'sitemap.xml').read_text()
+assert 'Providing a phone number alone does not enroll you in SMS.' in pages['demo'].source
+assert 'Spark Standby is operated by Seif Sharara.' in pages['demo'].source
+assert 'not an HVAC contractor' in pages['demo'].source
+for phrase in ['Reply STOP', 'Reply HELP', 'not a condition of purchase or form submission', 'Providing a phone number alone does not provide SMS consent']:
+    assert phrase in pages['sms-consent'].source, phrase
 print('PASS: Six routes, consent/identity/number contract, legal links, HighLevel embed, and sitemap.')

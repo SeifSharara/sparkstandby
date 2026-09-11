@@ -15,6 +15,7 @@
   const timers = new Set();
   let phase = 'call';
   let selectedService = null;
+  let selectedDetail = null;
   let detail = '';
   let preference = '';
   let nextStep = '';
@@ -30,22 +31,22 @@
       ],
       next: 'Thanks for the details. When would you like the team to follow up?',
       preferences: [
-        { label: 'As soon as possible', summary: 'Customer would like service and a callback as soon as possible.', reply: 'Thanks, Sarah. I’ve shared the cooling issue and your request for a callback as soon as possible. The team will confirm availability with you.' },
-        { label: 'Tomorrow works', summary: 'Customer would like service and a callback tomorrow.', reply: 'Thanks, Sarah. I’ve shared the cooling issue and your request for a callback tomorrow. The team will confirm availability with you.' }
+        { label: 'As soon as possible', summary: 'Customer would like service and a callback as soon as possible.', reply: 'Thanks, Sarah. I’ve noted the cooling issue and that you’d like a callback as soon as possible. The team would have that context when they follow up.' },
+        { label: 'Tomorrow works', summary: 'Customer would like service and a callback tomorrow.', reply: 'Thanks, Sarah. I’ve noted the cooling issue and that you’d prefer a callback tomorrow. The team would have that context when they follow up.' }
       ]
     },
     quote: {
       label: 'I need a quote', service: 'Installation Quote',
       handoff: 'Discuss scope and timing before preparing an estimate.',
-      question: 'Of course. Is this for replacing an existing system or installing one in a new space?',
+      question: 'Absolutely. Is this for replacing an existing system or installing one in a new space?',
       details: [
-        { label: 'Replacing my current system', summary: 'Customer wants a quote to replace an existing HVAC system.', nextStep: 'Discuss a system replacement quote' },
-        { label: 'An installation in a new space', summary: 'Customer wants a quote for an HVAC installation in a new space.', nextStep: 'Discuss a new installation quote' }
+        { label: 'Replacing my current system', service: 'Replacement Quote', request: 'replace your current system', summary: 'Customer wants a quote to replace an existing HVAC system.', nextStep: 'Discuss replacement scope and timing.' },
+        { label: 'An installation in a new space', service: 'Installation Quote', request: 'install a system in a new space', summary: 'Customer wants a quote for an HVAC installation in a new space.', nextStep: 'Discuss installation scope and timing.' }
       ],
-      next: 'Got it. Are you ready to discuss the project, or just planning ahead?',
+      next: 'Got it. Are you ready to discuss the project now, or just planning ahead?',
       preferences: [
-        { label: 'I’m ready to get started', summary: 'Customer is ready to discuss the project.', reply: 'Thanks, Sarah. I’ve let the team know you’d like a quote and are ready to discuss the project. They can talk through the options with you.' },
-        { label: 'Just planning ahead', summary: 'Customer is planning ahead and comparing options.', reply: 'Thanks, Sarah. I’ve noted that you’re planning ahead and comparing options. The team can help you understand what the project would involve.' }
+        { label: 'I’m ready to get started', summary: 'Customer is ready to discuss the project.', reply: (detail) => 'Thanks, Sarah. I’ve noted that you’re looking to ' + detail.request + ' and are ready to discuss the project. The team would have that context when they follow up.' },
+        { label: 'Just planning ahead', summary: 'Customer is still comparing options.', reply: (detail) => 'Thanks, Sarah. I’ve noted that you’re looking to ' + detail.request + ' and are still comparing options. The team would have that context when they follow up.' }
       ]
     },
     maintenance: {
@@ -58,8 +59,8 @@
       ],
       next: 'Thanks. When would you like the team to follow up?',
       preferences: [
-        { label: 'As soon as possible', summary: 'Customer would like a callback as soon as possible.', reply: 'Thanks, Sarah. I’ve shared your maintenance inquiry and request for a callback as soon as possible. The team will confirm the next step with you.' },
-        { label: 'Sometime this week', summary: 'Customer would like a callback this week.', reply: 'Thanks, Sarah. I’ve shared your maintenance inquiry and request for a callback this week. The team will confirm the next step with you.' }
+        { label: 'As soon as possible', summary: 'Customer would like a callback as soon as possible.', reply: 'Thanks, Sarah. I’ve noted your maintenance question and that you’d like a callback as soon as possible. The team would have that context when they follow up.' },
+        { label: 'Sometime this week', summary: 'Customer would like a callback this week.', reply: 'Thanks, Sarah. I’ve noted your maintenance question and that you’d prefer a callback this week. The team would have that context when they follow up.' }
       ]
     }
   };
@@ -106,7 +107,7 @@
     choices.replaceChildren();
     isTyping = true;
     choices.setAttribute('aria-busy', 'true');
-    byId('reply-label').textContent = 'NORTHLINE IS TYPING…';
+    byId('reply-label').textContent = 'Northline is typing…';
     const typing = document.createElement('div');
     typing.className = 'message automated typing-indicator';
     typing.setAttribute('aria-hidden', 'true');
@@ -125,7 +126,7 @@
   function showChoices(options, onSelect) {
     choices.replaceChildren();
     const question = { service: 1, detail: 2, preference: 3 }[phase];
-    byId('reply-label').textContent = 'CHOOSE SARAH’S REPLY · ' + question + ' OF 3';
+    byId('reply-label').textContent = 'Your reply as Sarah · ' + question + ' of 3';
     options.forEach((option) => {
       const button = document.createElement('button');
       button.type = 'button';
@@ -147,8 +148,8 @@
     smsScreen.hidden = false;
     phone.classList.add('is-messaging');
     progress(1);
-    guide('A missed call becomes a conversation.', 'Choose Sarah’s replies below. A few helpful questions give the business a clearer picture.');
-    byId('device-caption').textContent = 'You’re choosing the customer’s replies.';
+    guide('You’re Sarah now.', 'Choose how you’d respond. These buttons are just for the simulation; the real conversation happens by SMS.');
+    byId('device-caption').textContent = 'Simulated replies. Real conversations use SMS.';
     addMessage('Today · Sarah agreed to receive texts', 'meta');
     automatedReply('Hi Sarah, sorry we missed your call. This is Northline Heating & Air. How can we help? Reply STOP to opt out.', () => {
       showChoices(Object.entries(branches).map(([key, value]) => ({ key, label: value.label })), (option) => {
@@ -156,6 +157,7 @@
         phase = 'detail';
         automatedReply(selectedService.question, () => {
           showChoices(selectedService.details, (selection) => {
+            selectedDetail = selection;
             detail = selection.summary;
             nextStep = selection.nextStep;
             phase = 'preference';
@@ -163,8 +165,8 @@
               showChoices(selectedService.preferences, (selection) => {
                 preference = selection.summary;
                 phase = 'ready';
-                automatedReply(selection.reply, () => {
-                  byId('reply-label').textContent = 'NOW SEE WHAT THE BUSINESS RECEIVES';
+                automatedReply(typeof selection.reply === 'function' ? selection.reply(selectedDetail) : selection.reply, () => {
+                  byId('reply-label').textContent = 'Now see what the business receives';
                   const reveal = document.createElement('button');
                   reveal.type = 'button';
                   reveal.className = 'reveal-button';
@@ -172,7 +174,7 @@
                   reveal.addEventListener('click', revealLead, { once: true });
                   choices.appendChild(reveal);
                   focus(reveal);
-                  announce('Conversation complete. Select See the business side to see the captured lead.');
+                  announce('Simulated conversation complete. Select See the business side to see the example lead.');
                 });
               });
             });
@@ -187,27 +189,29 @@
     const stage = document.querySelector('.device-stage');
     choices.querySelectorAll('button').forEach((button) => { button.disabled = true; });
     stage.classList.add('is-leaving');
-    announce('Opening the business view with Sarah’s inquiry.');
+    announce('Opening the simulated business view with Sarah’s inquiry.');
     later(() => {
       phase = 'complete';
       workspace.classList.add('is-complete');
       stage.hidden = true;
       stage.classList.remove('is-leaving');
       owner.hidden = false;
-      byId('lead-service').textContent = selectedService.service;
-      byId('lead-summary').textContent = detail + ' ' + preference;
+      byId('lead-service').textContent = selectedDetail.service || selectedService.service;
+      byId('lead-summary').textContent = selectedDetail.request
+        ? detail.replace(/\.$/, '') + ' ' + preference.replace('Customer is ', 'and is ')
+        : detail + ' ' + preference;
       byId('lead-next-step').textContent = nextStep;
       byId('lead-next-note').textContent = selectedService.handoff;
       byId('demo-perspective').textContent = 'The business experience';
       progress(2);
-      guide('A useful inquiry. Ready for your callback.', 'You know why Sarah called and what she needs next. Pick up the conversation without starting from scratch.');
+      guide('You already know why she called.', 'Instead of returning a missed call cold, you return it with context.');
       const statuses = document.querySelectorAll('.workflow-statuses li');
       statuses.forEach((status, index) => {
         later(() => {
           status.classList.add('done');
           if (index === statuses.length - 1) {
             result.hidden = false;
-            announce('Demo complete. Lead captured, conversation logged, and business notified. No real messages were sent.');
+            announce('Simulation complete. This is how the service need and conversation would appear to the business. No real lead was created or messages sent.');
           }
         }, 160 + index * 150);
       });
@@ -217,7 +221,7 @@
   function reset() {
     timers.forEach((timer) => window.clearTimeout(timer));
     timers.clear();
-    phase = 'call'; selectedService = null; detail = ''; preference = ''; nextStep = ''; isTyping = false;
+    phase = 'call'; selectedService = null; selectedDetail = null; detail = ''; preference = ''; nextStep = ''; isTyping = false;
     workspace.classList.remove('is-complete', 'show-conversation');
     document.querySelector('.device-stage').hidden = false;
     document.querySelector('.device-stage').classList.remove('is-leaving');
@@ -227,7 +231,7 @@
     phone.classList.remove('is-messaging', 'is-missed');
     messages.replaceChildren(); choices.replaceChildren();
     choices.setAttribute('aria-busy', 'false');
-    byId('reply-label').textContent = 'CHOOSE SARAH’S REPLY';
+    byId('reply-label').textContent = 'Your reply as Sarah';
     byId('lead-next-step').textContent = 'Call Sarah to discuss service';
     byId('lead-next-note').textContent = 'You decide availability and confirm the next step.';
     byId('lead-summary').textContent = '';
@@ -239,7 +243,7 @@
     byId('device-caption').textContent = 'Fictional customer. Real-world possibility.';
     byId('view-conversation').setAttribute('aria-expanded', 'false');
     byId('view-conversation').innerHTML = 'View the conversation <span aria-hidden="true">↗</span>';
-    guide('You’re busy. A new customer is calling.', 'Sarah is calling about her home’s heating and air. You’re on another job and can’t pick up.');
+    guide('You’re busy. A new customer is calling.', 'Tap “Miss Call” to continue. Then step into Sarah’s shoes.');
     progress(0);
     announce('Demo restarted. Sarah is calling.');
     revealFocus(byId('miss-call'));
@@ -251,7 +255,7 @@
     byId('miss-call').disabled = true;
     byId('miss-call').querySelector('span').textContent = 'Call missed';
     byId('call-state').textContent = 'Missed call';
-    announce('Missed call detected. In this example, Sarah agrees to receive a text.');
+    announce('Simulated missed call detected. In this example, Sarah agrees to receive a text.');
     later(() => {
       byId('call-state').textContent = 'Sarah agrees to a text · Starting follow-up…';
       later(() => {

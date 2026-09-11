@@ -19,6 +19,7 @@ with sync_playwright() as p:
     errors = []
     page.on('pageerror', lambda error: errors.append(str(error)))
     page.goto(BASE)
+    expect(page.locator('main > section')).to_have_count(5)
     expect(page.get_by_role('heading', level=1)).to_have_count(1)
 
     for width in [320, 375, 390, 640, 720, 768, 1024, 1440, 1920]:
@@ -65,6 +66,10 @@ with sync_playwright() as p:
     expect(toggle).to_have_attribute('aria-expanded', 'false')
     print('PASS: Mobile navigation opens by keyboard and closes on Escape and selection.')
 
+    miss_call = page.locator('#miss-call')
+    assert miss_call.evaluate('(el) => getComputedStyle(el).backgroundColor') == 'rgb(37, 99, 235)'
+    assert miss_call.bounding_box()['height'] >= 44
+
     requests = []
     page.on('request', lambda request: requests.append(request.url))
     for label, service, details, preferences, summaries in BRANCHES:
@@ -77,25 +82,31 @@ with sync_playwright() as p:
                 page.get_by_role('button', name=detail, exact=True).click()
                 page.get_by_role('button', name=preference, exact=True).click()
                 expect(page.get_by_role('button', name='See the business side →', exact=True)).to_be_visible()
+                ending = page.locator('#messages .automated').last
+                expect(ending).to_contain_text('I’ve noted')
+                expect(ending).to_contain_text('The team would have that context when they follow up.')
+                assert not any(claim in ending.inner_text() for claim in ['I’ve shared', 'I’ve sent', 'I notified', 'I’ll pass along', 'will confirm'])
                 assert page.locator('#messages').evaluate('(el) => el.scrollHeight - el.scrollTop - el.clientHeight < 2'), 'Latest message is clipped after choices render'
                 page.get_by_role('button', name='See the business side →', exact=True).click()
-                expect(page.locator('#lead-service')).to_have_text(service)
+                expected_service = 'Replacement Quote' if service == 'Installation Quote' and detail_index == 0 else service
+                expect(page.locator('#lead-service')).to_have_text(expected_service)
                 expect(page.locator('#demo-perspective')).to_have_text('The business experience')
                 expect(page.locator('#owner-panel')).to_be_focused()
                 expect(page.locator('#lead-summary')).to_contain_text(summaries[detail_index])
                 next_steps = {
                     'AC Repair': ['Call Sarah about the cooling issue', 'Call Sarah about the stopped system'],
-                    'Installation Quote': ['Discuss a system replacement quote', 'Discuss a new installation quote'],
+                    'Installation Quote': ['Discuss replacement scope and timing.', 'Discuss installation scope and timing.'],
                     'HVAC Maintenance': ['Discuss a seasonal tune-up', 'Discuss a system inspection'],
                 }
                 expect(page.locator('#lead-next-step')).to_have_text(next_steps[service][detail_index])
                 if preference == 'Tomorrow works':
                     expect(page.locator('#messages .automated').last).to_contain_text('callback tomorrow')
                 if preference == 'Just planning ahead':
-                    expect(page.locator('#messages .automated').last).to_contain_text('planning ahead')
+                    expect(page.locator('#messages .automated').last).to_contain_text('still comparing options')
+                    expect(page.locator('#messages .automated').last).to_contain_text('replace your current system' if detail_index == 0 else 'install a system in a new space')
                 if preference == 'Sometime this week':
                     expect(page.locator('#messages .automated').last).to_contain_text('callback this week')
-                expect(page.locator('#workflow-statuses .done')).to_have_count(6)
+                expect(page.locator('#workflow-statuses .done')).to_have_count(4)
                 expect(page.locator('#demo-result')).to_be_visible()
                 assert page.evaluate('document.documentElement.scrollWidth <= innerWidth')
                 page.get_by_role('button', name='View the conversation').click()
@@ -112,7 +123,7 @@ with sync_playwright() as p:
     expect(page.locator('.demo-consent-details p')).to_contain_text('Providing a phone number alone is not consent.')
     page.locator('.demo-consent-details summary').click()
     assert requests == [], f'Demo unexpectedly made network requests: {requests}'
-    print('PASS: All 12 conversation paths, accurate lead summaries, six success states, transcript review, and no network requests.')
+    print('PASS: All 12 conversation paths, accurate lead summaries, four status checks, transcript review, and no network requests.')
 
     # Exercise timers and restart while the animated flow is still pending.
     page.emulate_media(reduced_motion='no-preference')
@@ -152,14 +163,37 @@ with sync_playwright() as p:
     page.keyboard.press('Enter')
     for name, count in [('My AC isn’t cooling', 1), ('Running, but blowing warm air', 2), ('As soon as possible', 3)]:
         expect(page.get_by_role('button', name=name, exact=True)).to_be_focused()
-        expect(page.locator('#reply-label')).to_contain_text(f'{count} OF 3')
+        expect(page.locator('#reply-label')).to_contain_text(f'{count} of 3')
         page.keyboard.press('Enter')
     expect(page.get_by_role('button', name='See the business side →')).to_be_focused()
     page.keyboard.press('Enter')
     expect(page.locator('#owner-panel')).to_be_focused()
-    expect(page.locator('#workflow-statuses .done')).to_have_count(6)
+    expect(page.locator('#workflow-statuses .done')).to_have_count(4)
     expect(page.locator('#demo-result')).to_be_visible()
     print('PASS: Entire animated conversation and business reveal work by keyboard.')
+
+    # Check the phone and handoff at narrow mobile, tablet, and desktop sizes.
+    page.emulate_media(reduced_motion='reduce')
+    for width in [320, 768, 1440]:
+        page.set_viewport_size({'width': width, 'height': 1000})
+        page.get_by_role('button', name='Restart', exact=True).click()
+        page.locator('#miss-call').click()
+        for reply in ['I need a quote', 'Replacing my current system', 'Just planning ahead']:
+            button = page.get_by_role('button', name=reply, exact=True)
+            expect(button).to_be_visible()
+            assert button.bounding_box()['height'] >= 44
+            button.click()
+        reveal = page.get_by_role('button', name='See the business side →')
+        expect(reveal).to_be_visible()
+        assert page.evaluate('document.documentElement.scrollWidth <= innerWidth')
+        page.locator('#phone-shell').screenshot(path=f'/tmp/spark-conversation-{width}.png')
+        reveal.click()
+        expect(page.locator('#demo-result')).to_be_visible()
+        expect(page.locator('#lead-service')).to_have_text('Replacement Quote')
+        expect(page.locator('#lead-summary')).to_have_text('Customer wants a quote to replace an existing HVAC system and is still comparing options.')
+        assert page.evaluate('document.documentElement.scrollWidth <= innerWidth')
+        page.locator('#demo-workspace').screenshot(path=f'/tmp/spark-business-{width}.png')
+    print('PASS: Phone replies and business handoff fit 320px, tablet, and desktop; reply targets are at least 44px.')
 
     assert not errors, errors
     print('PASS: No browser runtime errors.')

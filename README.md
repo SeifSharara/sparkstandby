@@ -29,42 +29,25 @@ Contact information, demo phone links, metadata, and legal dates also exist in
 static HTML. Update those occurrences together with config; config does not
 rewrite static page content. Shared styling is in `css/styles.css`.
 
-## Live demo: pending external integration
+## Live demo
 
-Intended flow:
-Website opt-in → HighLevel records consent → /demo/ready/ → user calls
-571-556-5051 from the submitted mobile number → HighLevel verifies consent →
-missed-call demo workflow → clearly identified demo SMS conversation.
+`/demo/` embeds the real HighLevel form `5WP9sjNGRUWmi2fYcQGk` and its
+provided resizing script. No local fields, fake consent state, PII storage,
+or consent query parameters are added. The homepage simulation is separate.
 
-The actual form exists externally, but no embed snippet is available here.
-`demo/index.html` contains a visibly nonfunctional placeholder at
-`#highlevel-form-container` and an exact integration TODO. It has no fields,
-submit action, local consent state, API endpoint, or browser PII storage.
-All program pages disclose that the live demo is not yet available.
+Flow: website opt-in → HighLevel records consent → `/demo/ready/` → caller uses
+571-556-5051 from the submitted mobile number → external workflow checks
+permission before sending the requested demo SMS.
 
-### Next HighLevel steps (external; not implemented here)
+On September 11, 2026, the public form exposes a separate optional, unchecked
+SMS checkbox and a redirect to `https://sparkstandby.netlify.app/demo/ready/`.
+This repository does not configure or verify the SMS workflow. Its operator
+must verify consent records, same-number matching, opt-outs, STOP/HELP handling,
+and the no-consent path before treating the messaging experience as ready.
+The ready page provides call instructions; visiting it never grants consent.
 
-1. Obtain the real form embed and replace the entire placeholder. Verify First
-   Name and Phone labels, plus a separate optional unchecked non-marketing SMS
-   checkbox identifying Spark Standby, operated by Seif Sharara, and the requested
-   live demo. Verify frequency, rates, HELP, STOP, and direct legal links.
-2. Configure successful form submission to redirect to the production
-   `/demo/ready/`, without names, phone numbers, or consent URL parameters.
-   Unchecked consent must not prevent submission or grant SMS permission.
-3. Verify stored consent status and available timestamp/source/disclosure
-   evidence in HighLevel. Confirm returning-contact and prior STOP behavior.
-4. Build the external inbound missed-call workflow for +15715565051. Match the
-   caller to the submitted number and check affirmative consent and opt-out
-   status before sending. A page visit or call alone is never consent. Ensure
-   other automations cannot send an unsolicited acknowledgment on submission.
-5. Use demo-labeled messages from Spark Standby, operated by Seif Sharara;
-   do not impersonate an HVAC contractor. Implement and test HELP and STOP.
-6. Test opted-in, unchecked, different-number, unregistered caller, direct-ready
-   visit, failed submission, repeated submission, and opted-out scenarios.
-7. Verify the embed's network requests, cookies/tracking, retention, and privacy
-   statements. Remove preparation notices only after the form and workflow are
-   verified. Capture genuine current form evidence and align the A2P submission
-   CTA, program description, samples, number, and legal URLs before resubmitting.
+See [REFINEMENT-REVIEW.md](REFINEMENT-REVIEW.md) for verification results,
+remaining review items, and optional manual HighLevel styling changes.
 
 `images/ivr-verbal-consent-evidence.png` is retained as historical evidence only.
 It describes the retired IVR consent approach and is not linked as current
@@ -75,7 +58,7 @@ program evidence. Do not reuse it for the web-form campaign or fabricate evidenc
 `/#demo` and `js/demo.js` retain the browser-only Northline Heating & Air / Sarah
 Mitchell simulation. Both identities are fictional. It makes no API requests,
 collects no visitor information, and sends no calls or texts. The homepage links
-separately to `/demo/` and explains that live enrollment is pending.
+separately to `/demo/` and explains that SMS requires affirmative permission.
 The existing favicon and Open Graph image remain solid-color placeholders.
 
 ## Verification
@@ -91,3 +74,10 @@ Checks cover the six routes, live-demo/consent links, number and identity
 consistency, absence of fake submission/state, mobile overflow, navigation,
 and all twelve simulation branches. No package installation is needed in the
 current development environment. These checks do not verify HighLevel or SMS.
+
+`python3 tests/check_embed.py` additionally checks the live embed at four widths,
+including optional unchecked consent and legal links. It requires network access
+and may be blocked by HighLevel/Cloudflare; it never submits or enters PII.
+
+`python3 tests/check_motion.py` checks one-time viewport entry, the hero sequence
+budget, reduced-motion changes, stacked pathways, and no-JavaScript visibility.

@@ -8,7 +8,7 @@ web
 
 ## Users
 
-Primary users are owners/managers of local service businesses (e.g. contractors, clinics, and similar) evaluating Spark Standby for lead follow-up and customer communication systems. They land on the site to assess credibility and decide whether to reach out by email or phone.
+Primary users are owners/managers of local service businesses (HVAC, plumbing, electrical, roofing, duct cleaning, and cleaning) evaluating Spark Standby for lead follow-up and customer communication systems. They land on the site to assess credibility and decide whether to reach out by email or phone.
 
 ## Product Purpose
 
@@ -68,16 +68,16 @@ No product-specific accessibility requirement established beyond standard web ac
 ## Live Demo Readiness
 
 `/demo/` explains the requested non-marketing demonstration and contains a
-clearly labeled HighLevel form placeholder. No local form or consent state exists.
+real HighLevel form embed. No local form or consent state exists.
 `/demo/ready/` provides same-number calling instructions, is noindex, and does
-not establish consent. Both pages disclose that the live demo is not yet available.
+not establish consent. The ready page focuses on the next call; SMS workflow readiness still needs operator verification.
 
 Intended flow: website opt-in → HighLevel records consent → /demo/ready/ →
 user calls 571-556-5051 → HighLevel verifies consent → missed-call demo workflow
 → demo SMS conversation. SMS consent is separate, optional, and unchecked;
 phone entry alone is not consent. General contact remains 703-678-1815.
 
-The external HighLevel embed must be supplied, and its workflow must still be
-built and tested. The legal and SMS pages describe this pending web-form flow.
+The external HighLevel form is connected. Its workflow and consent handling
+must still be verified end to end; no workflow changes are made in this repository.
 The old IVR evidence image is historical only, not current consent evidence.
 New genuine evidence must be captured after deployment and verification.
