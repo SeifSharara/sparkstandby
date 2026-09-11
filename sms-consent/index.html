@@ -3,189 +3,50 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SMS Consent & Phone IVR Opt-In | Seif Sharara</title>
-  <meta name="description" content="Seif Sharara collects SMS consent exclusively through a phone-based IVR opt-in flow. Callers must press 1 to affirmatively consent before any text message is sent.">
+  <title>SMS Consent | Spark Standby</title>
+  <meta name="description" content="How Spark Standby, operated by Seif Sharara, collects optional web-form consent for the requested live missed-call demo.">
   <link rel="canonical" href="/sms-consent/">
 
   <meta property="og:type" content="website">
-  <meta property="og:title" content="SMS Consent & Phone IVR Opt-In | Seif Sharara">
-  <meta property="og:description" content="Seif Sharara collects SMS consent exclusively through a phone-based IVR opt-in flow. Callers must press 1 to affirmatively consent before any text message is sent.">
+  <meta property="og:title" content="SMS Consent | Spark Standby">
+  <meta property="og:description" content="How Spark Standby, operated by Seif Sharara, collects optional web-form consent for the requested live missed-call demo.">
   <meta property="og:url" content="/sms-consent/">
   <meta property="og:image" content="/images/og-image.png">
-
   <link rel="icon" type="image/png" href="/images/favicon.png">
-
   <link rel="stylesheet" href="/css/styles.css">
   <script src="/js/config.js" defer></script>
 </head>
 <body>
+  <a class="skip-link" href="#main">Skip to content</a>
   <div id="site-header"></div>
-
-  <main>
-    <header class="page-header">
-      <div class="container">
-        <h1>SMS Consent &amp; Phone IVR Opt-In</h1>
-        <p class="meta">How SMS consent is collected and how messaging works</p>
-      </div>
-    </header>
-
-    <section>
-      <div class="container">
-        <div class="prose">
-          <p>Seif Sharara uses a phone-based IVR process to collect consent before sending informational SMS messages. A caller must affirmatively press 1 after hearing the SMS disclosure before a text message is sent. If the caller does not press 1, no SMS is sent.</p>
-
-          <div class="fact-panel">
-            <h2 style="margin-top:0;">Current SMS Opt-In Method</h2>
-            <p>The only SMS opt-in method used for this messaging campaign is verbal consent collected through the business phone IVR. This campaign does not use website forms, QR codes, paper forms, purchased lists, rented lists, affiliate lists, or other SMS opt-in methods.</p>
-          </div>
-
-          <h2>How the Phone Opt-In Works</h2>
-          <ol class="step-list">
-            <li>A consumer calls the Seif Sharara business phone number.</li>
-            <li>The call is first routed to the business.</li>
-            <li>If the call cannot be answered, the caller hears an SMS consent prompt.</li>
-            <li>The caller is offered the option to receive a text message related to the inquiry.</li>
-            <li>The caller must press 1 to provide affirmative consent.</li>
-            <li>If the caller presses 1, consent is recorded and an informational SMS may be sent.</li>
-            <li>If the caller does not press 1, no SMS is sent and the caller may remain on the line to leave a voicemail.</li>
-          </ol>
-
-          <h2>Current IVR Consent Disclosure</h2>
-          <div class="callout">
-            <span class="callout-label">Current IVR Consent Disclosure</span>
-            "Sorry we missed your call. If you'd like Seif Sharara to text you about this inquiry, press 1. Message frequency varies. Message and data rates may apply. Reply HELP for help or STOP to opt out. Otherwise, stay on the line to leave a voicemail."
-          </div>
-          <p>This disclosure is presented to callers before SMS consent is collected.</p>
-
-          <h2>Consent Action</h2>
-          <p>The caller provides affirmative consent by pressing 1 on the phone keypad. Pressing 1 is required before an SMS is sent through this IVR opt-in flow.</p>
-
-          <h2>No Consent = No SMS</h2>
-          <p>If the caller does not press 1, no SMS message is sent through this phone-based opt-in process.</p>
-
-          <h2>Types of Messages</h2>
-          <p>Individuals who opt in through this phone-based process may receive informational messages related to:</p>
-          <ul>
-            <li>Responses to inquiries</li>
-            <li>Missed-call follow-up</li>
-            <li>Appointment scheduling and confirmations</li>
-            <li>Customer support</li>
-          </ul>
-          <p>This phone-based opt-in does not provide consent for promotional or marketing SMS messages. Marketing messages, if ever offered, require separate explicit consent.</p>
-
-          <h2>Message Frequency</h2>
-          <p>Text message frequency varies depending on the individual's interaction and inquiry.</p>
-
-          <h2>Rates</h2>
-          <p>Message and data rates may apply.</p>
-
-          <h2>Opting Out</h2>
-          <p>Recipients may reply STOP at any time to stop receiving SMS messages.</p>
-
-          <h2>Help</h2>
-          <p>Recipients may reply HELP for assistance.</p>
-
-          <h2>Consent Is Optional</h2>
-          <p>Consent to receive SMS messages is not a condition of purchasing goods or services.</p>
-        </div>
-      </div>
-    </section>
-
-    <section id="reviewer-verification">
-      <div class="container">
-        <div class="prose">
-          <span class="section-tag">For Carrier / A2P Reviewers</span>
-          <h2>A2P Reviewer Verification</h2>
-          <p>The SMS consent flow is implemented through the inbound phone IVR. Reviewers can verify the consent process using the business phone number below.</p>
-
-          <div class="verify-card">
-            <span class="status-badge is-live" id="ivr-status-badge">IVR Live</span>
-            <p id="ivr-status-text">The IVR flow described above is live for this messaging campaign. Reviewers can call the business phone number below to verify the consent experience directly.</p>
-
-            <div class="verify-grid">
-              <div class="verify-item">
-                <div class="label">Business Name</div>
-                <div class="value">Seif Sharara</div>
-              </div>
-              <div class="verify-item">
-                <div class="label">Business Phone</div>
-                <div class="value"><a href="tel:+18578376539" id="ivr-phone-link">(857) 837-6539</a></div>
-              </div>
-            </div>
-          </div>
-
-          <p><strong>Expected verification flow:</strong></p>
-          <ol class="step-list">
-            <li>Call the business phone number.</li>
-            <li>Allow the call to go unanswered.</li>
-            <li>The IVR presents the SMS consent disclosure.</li>
-            <li>Press 1 to provide consent.</li>
-            <li>If no consent is provided, no SMS should be sent.</li>
-          </ol>
-        </div>
-      </div>
-    </section>
-
-    <section id="ivr-evidence">
-      <div class="container">
-        <div class="prose">
-          <span class="section-tag">Configuration Reference</span>
-          <h2>IVR Configuration Evidence</h2>
-          <p>The diagram below documents the exact IVR disclosure, the consent flow, and the underlying HighLevel workflow configuration, shown for reviewer reference.</p>
-        </div>
-
-        <figure class="evidence-item evidence-item-wide">
-          <div class="evidence-frame evidence-frame-auto">
-            <img
-              src="/images/ivr-verbal-consent-evidence.png"
-              alt="SMS Consent Verbal Prompt Evidence: the exact IVR disclosure, the phone-based consent flow, and HighLevel IVR configuration screenshots showing key press 1 mapped to SMS Consent."
-              loading="lazy"
-              onerror="this.closest('.evidence-frame').innerHTML = '&lt;div class=&quot;evidence-placeholder&quot;&gt;&lt;span class=&quot;icon&quot;&gt;&#128247;&lt;/span&gt;Configuration screenshot to be added before campaign resubmission&lt;/div&gt;';"
-            >
-          </div>
-          <figcaption class="evidence-caption">SMS Consent Verbal Prompt Evidence — IVR disclosure, consent flow, and HighLevel configuration showing key press 1 mapped to SMS Consent.</figcaption>
-        </figure>
-      </div>
-    </section>
-
-    <section id="legal-links-section">
-      <div class="container">
-        <div class="legal-links">
-          <a href="/privacy/">Privacy Policy</a>
-          <a href="/terms/">Terms &amp; Conditions</a>
-        </div>
-      </div>
-    </section>
+  <main id="main">
+    <header class="page-header"><div class="container"><h1>SMS Consent</h1><p class="meta">Last Updated: September 10, 2026</p></div></header>
+    <section><div class="container"><div class="prose">
+      <p>Spark Standby is operated by Seif Sharara, a sole proprietor. The sender for this program is <strong>Spark Standby, operated by Seif Sharara</strong>.</p>
+      <p class="fact-panel"><strong>Not yet available.</strong> The live demo is being prepared. SMS enrollment is not available on this site yet, and the demo messaging workflow still needs to be connected and tested.</p>
+      <h2>How SMS consent is collected</h2>
+      <p>The following describes the web-form flow being prepared for the requested non-marketing live demo. <a href="/demo/">Visit the live demo opt-in page</a>. Its form placeholder does not collect consent.</p>
+      <ol class="step-list">
+        <li>Visit <a href="/demo/">/demo/</a> and enter your first name and mobile phone number in the connected form once available.</li>
+        <li>Choose whether to select a separate, optional SMS consent checkbox. It is unchecked by default. Providing a phone number alone does not provide SMS consent.</li>
+        <li>Submit the form. Consent is recorded only if you affirmatively opt in. Successful submissions, including those without SMS consent, lead to <a href="/demo/ready/">/demo/ready/</a>.</li>
+        <li>Call the live demo number, <a href="tel:+15715565051">(571) 556-5051</a>, from the same mobile number you submitted. The call intentionally goes unanswered.</li>
+        <li>The missed call may trigger the requested demo SMS only after prior opt-in has been recorded and verified. Without opt-in, no demo SMS is sent.</li>
+      </ol>
+      <h2>Planned form disclosure</h2>
+      <p>This wording describes the intended consent request; reading it is not consent. The connected form’s actual wording must be verified before enrollment opens.</p>
+      <div class="callout">“I consent to receive non-marketing text messages from Spark Standby, operated by Seif Sharara, about the requested live missed-call demo. Message frequency may vary. Message &amp; data rates may apply. Text HELP for assistance, reply STOP to opt out.”</div>
+      <h2>Messaging terms</h2>
+      <p>Consent applies to the requested live-demo conversation, not marketing or promotional messages. Consent is optional and is not a condition of purchase or form submission.</p>
+      <ul><li>Message frequency may vary.</li><li>Message and data rates may apply.</li><li>Reply STOP to opt out of further SMS messages.</li><li>Reply HELP for assistance or support information.</li></ul>
+      <p>STOP and HELP handling must be enabled and tested before the messaging program launches. For support now, email <a href="mailto:seifsharara@gmail.com">seifsharara@gmail.com</a> or call the general contact number <a href="tel:+17036781815">(703) 678-1815</a>.</p>
+      <h2>A demonstration, not a service appointment</h2>
+      <p>Spark Standby is not acting as an HVAC contractor in this demo. No technician is dispatched, no equipment diagnosis is provided, and no real appointment is scheduled.</p>
+      <h2>For A2P reviewers</h2>
+      <p>The opt-in URL is <a href="/demo/">/demo/</a>. The live form and external messaging workflow are pending connection and verification. This page is not evidence of a working SMS program. Current form evidence will be captured after deployment and verification.</p>
+      <div class="legal-links"><a href="/privacy/">Privacy Policy</a><a href="/terms/">Terms &amp; Conditions</a></div>
+    </div></div></section>
   </main>
-
   <div id="site-footer"></div>
-
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      var c = window.SITE_CONFIG || {};
-      var phone = c.ivrPhone || c.phone;
-      var phoneLink = document.getElementById("ivr-phone-link");
-      if (phoneLink && phone) {
-        phoneLink.textContent = phone;
-        phoneLink.href = "tel:" + phone.replace(/[^+\d]/g, "");
-      }
-
-      var badge = document.getElementById("ivr-status-badge");
-      var statusText = document.getElementById("ivr-status-text");
-      if (badge && statusText) {
-        if (c.ivrStatus === "live") {
-          badge.textContent = "IVR Live";
-          badge.classList.remove("is-pending");
-          badge.classList.add("is-live");
-          statusText.textContent = "The IVR flow described above is live for this messaging campaign. Reviewers can call the business phone number below to verify the consent experience directly.";
-        } else {
-          badge.textContent = "IVR Pre-Launch";
-          badge.classList.remove("is-live");
-          badge.classList.add("is-pending");
-          statusText.textContent = "The IVR flow is being configured for this messaging campaign. The public documentation below shows the exact consent experience that will be used before production SMS messages are sent.";
-        }
-      }
-    });
-  </script>
 </body>
 </html>
